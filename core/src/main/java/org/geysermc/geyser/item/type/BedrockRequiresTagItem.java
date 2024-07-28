@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 GeyserMC. http://geysermc.org
+ * Copyright (c) 2024 GeyserMC. http://geysermc.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,24 +23,14 @@
  * @link https://github.com/GeyserMC/Geyser
  */
 
-package org.geysermc.geyser.translator.protocol.java.level;
+package org.geysermc.geyser.item.type;
 
-import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.level.ClientboundSetDefaultSpawnPositionPacket;
-import org.cloudburstmc.protocol.bedrock.packet.SetSpawnPositionPacket;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.geysermc.geyser.session.GeyserSession;
-import org.geysermc.geyser.translator.protocol.PacketTranslator;
-import org.geysermc.geyser.translator.protocol.Translator;
-import org.geysermc.geyser.util.DimensionUtils;
+import org.geysermc.geyser.translator.item.BedrockItemBuilder;
+import org.geysermc.mcprotocollib.protocol.data.game.item.component.DataComponents;
 
-@Translator(packet = ClientboundSetDefaultSpawnPositionPacket.class)
-public class JavaSetDefaultSpawnPositionTranslator extends PacketTranslator<ClientboundSetDefaultSpawnPositionPacket> {
+public interface BedrockRequiresTagItem {
 
-    @Override
-    public void translate(GeyserSession session, ClientboundSetDefaultSpawnPositionPacket packet) {
-        SetSpawnPositionPacket spawnPositionPacket = new SetSpawnPositionPacket();
-        spawnPositionPacket.setBlockPosition(packet.getPosition());
-        spawnPositionPacket.setDimensionId(DimensionUtils.javaToBedrock(session));
-        spawnPositionPacket.setSpawnType(SetSpawnPositionPacket.Type.WORLD_SPAWN);
-        session.sendUpstreamPacket(spawnPositionPacket);
-    }
+    void addRequiredNbt(GeyserSession session, @Nullable DataComponents components, BedrockItemBuilder builder);
 }

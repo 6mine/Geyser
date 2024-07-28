@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 GeyserMC. http://geysermc.org
+ * Copyright (c) 2024 GeyserMC. http://geysermc.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,24 +23,27 @@
  * @link https://github.com/GeyserMC/Geyser
  */
 
-package org.geysermc.geyser.translator.protocol.java.level;
+package org.geysermc.geyser.translator.protocol.java;
 
-import org.geysermc.mcprotocollib.protocol.packet.ingame.clientbound.level.ClientboundSetDefaultSpawnPositionPacket;
-import org.cloudburstmc.protocol.bedrock.packet.SetSpawnPositionPacket;
+import org.cloudburstmc.protocol.bedrock.packet.PlayerListPacket;
+import org.geysermc.geyser.entity.type.player.PlayerEntity;
 import org.geysermc.geyser.session.GeyserSession;
 import org.geysermc.geyser.translator.protocol.PacketTranslator;
 import org.geysermc.geyser.translator.protocol.Translator;
-import org.geysermc.geyser.util.DimensionUtils;
+import org.geysermc.mcprotocollib.protocol.packet.configuration.clientbound.ClientboundFinishConfigurationPacket;
 
-@Translator(packet = ClientboundSetDefaultSpawnPositionPacket.class)
-public class JavaSetDefaultSpawnPositionTranslator extends PacketTranslator<ClientboundSetDefaultSpawnPositionPacket> {
+@Translator(packet = ClientboundFinishConfigurationPacket.class)
+public class JavaFinishConfigurationPacketTranslator extends PacketTranslator<ClientboundFinishConfigurationPacket> {
 
     @Override
-    public void translate(GeyserSession session, ClientboundSetDefaultSpawnPositionPacket packet) {
-        SetSpawnPositionPacket spawnPositionPacket = new SetSpawnPositionPacket();
-        spawnPositionPacket.setBlockPosition(packet.getPosition());
-        spawnPositionPacket.setDimensionId(DimensionUtils.javaToBedrock(session));
-        spawnPositionPacket.setSpawnType(SetSpawnPositionPacket.Type.WORLD_SPAWN);
-        session.sendUpstreamPacket(spawnPositionPacket);
+    public void translate(GeyserSession session, ClientboundFinishConfigurationPacket packet) {
+        // Clear the player list, as on Java the player list is cleared after transitioning from config to play phase
+        PlayerListPacket playerListPacket = new PlayerListPacket();
+        playerListPacket.setAction(PlayerListPacket.Action.REMOVE);
+        for (PlayerEntity otherEntity : session.getEntityCache().getAllPlayerEntities()) {
+            playerListPacket.getEntries().add(new PlayerListPacket.Entry(otherEntity.getTabListUuid()));
+        }
+        session.sendUpstreamPacket(playerListPacket);
+        session.getEntityCache().removeAllPlayerEntities();
     }
 }
