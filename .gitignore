@@ -2,6 +2,9 @@
 # Created by https://www.gitignore.io/api/git,java,maven,eclipse,netbeans,jetbrains+all,visualstudiocode
 # Edit at https://www.gitignore.io/gitignore?templates=git,java,maven,eclipse,netbeans,jetbrains+all,visualstudiocode
 
+# 6M
+patches/
+
 ### Eclipse ###
 .metadata
 bin/
@@ -249,7 +252,8 @@ locales/
 /packs/
 /dump.json
 /saved-refresh-tokens.json
+/saved-auth-chains.json
 /custom_mappings/
 /languages/
 /custom-skulls.yml
-patches/
+/permissions.yml
