@@ -69,4 +69,7 @@ repositories {
 
     // For Adventure snapshots
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+
+    // MinecraftAuth
+    maven("https://maven.lenni0451.net/snapshots")
 }
