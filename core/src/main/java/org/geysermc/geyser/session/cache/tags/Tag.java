@@ -23,11 +23,13 @@
  * @link https://github.com/GeyserMC/Geyser
  */
 
-package org.geysermc.geyser.registry.loader;
+package org.geysermc.geyser.session.cache.tags;
+
+import net.kyori.adventure.key.Key;
+import org.geysermc.geyser.session.cache.registry.JavaRegistryKey;
 
 /**
- * A holder of the constructor parameters to prevent them from automatically loading,
- * and instead load them when the load method is called.
+ * A tag in any of the registries that tags are loaded for by Geyser.
  */
-public record RegistryLoaderHolder<I, M>(I input, RegistryLoader<I, M> registryLoader) {
+public record Tag<T>(JavaRegistryKey<T> registry, Key tag) {
 }
